@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "options"
-        if: ${{ inputs.environment == 'production' }}
+        if: ${{ inputs.environment == 'production' || inputs.tags == false }}
         run: |
           exit 1        
 
