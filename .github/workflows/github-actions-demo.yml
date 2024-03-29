@@ -1,51 +1,87 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on:
+# name: GitHub Actions Demo
+# run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       logLevel:
+#         description: 'Log level'
+#         required: true
+#         default: 'warning'
+#         type: choice
+#         options:
+#         - info
+#         - warning
+#         - debug
+#       tags:
+#         description: 'Test scenario tags'
+#         required: false
+#         type: boolean
+#       environment:
+#         description: 'Environment to run tests against'
+#         type: choice
+#         required: true
+#         options:
+#           - sandbox
+#           - production
+
+# jobs:
+#   test-conditions:
+#     runs-on: ubuntu-latest
+#     continue-on-error: false
+#     strategy:
+#       fail-fast: true
+#     steps:
+#       - name: "options"
+#         if: ${{ inputs.environment == 'production' }}
+#         run: |
+#           echo "Pipe Failure"
+#           exit 1
+
+#   log-the-inputs:
+#     needs: test-conditions
+#     runs-on: ubuntu-latest
+#     steps:
+#       - run: |
+#           echo "Log level: $LEVEL"
+#           echo "Tags: $TAGS"
+#           echo "Environment: $ENVIRONMENT"
+#         env:
+#           LEVEL: ${{ inputs.logLevel }}
+#           TAGS: ${{ inputs.tags }}
+#           ENVIRONMENT: ${{ inputs.environment }}
+
+
+on: 
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: choice
-        required: true
-        options:
-          - sandbox
-          - production
 
 jobs:
-  test-conditions:
+  job1:
+    name: Job 1
     runs-on: ubuntu-latest
-    continue-on-error: false
-    strategy:
-      fail-fast: true
-    steps:
-      - name: "options"
-        if: ${{ inputs.environment == 'production' }}
-        run: |
-          echo "Pipe Failure"
-          exit 1
 
-  log-the-inputs:
-    needs: test-conditions
-    runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
-        env:
-          LEVEL: ${{ inputs.logLevel }}
-          TAGS: ${{ inputs.tags }}
-          ENVIRONMENT: ${{ inputs.environment }}
+    - name: Sleep and Run
+      run: |
+        echo "Sleeping for 10"
+
+
+  job2:
+    name: Job 2
+    needs: job1
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Dependant is Running
+      run: |
+        echo "Completed job 2, but triggering failure"
+        exit 1
+
+  job3:
+    name: Job 3
+    needs: job2
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Will never run
+      run: |
+        echo "If you can read this, the experiment failed"
