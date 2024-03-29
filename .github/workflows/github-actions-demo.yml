@@ -51,19 +51,39 @@
 #           ENVIRONMENT: ${{ inputs.environment }}
 
 
-on: 
+name: Deployment
+on:
   workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        type: choice
+        required: true
+        options:
+          - sandbox
+          - production
 
 jobs:
   job1:
-    name: Job 1
     runs-on: ubuntu-latest
-
     steps:
-    - name: Sleep and Run
-      run: |
-        echo "Sleeping for 10"
-
+      - name: "options"
+        if: ${{ inputs.environment == 'production' }}
+        run: |
+          exit 1        
 
   job2:
     name: Job 2
