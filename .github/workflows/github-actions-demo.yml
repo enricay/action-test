@@ -25,7 +25,20 @@ on:
           - production
 
 jobs:
+  test-conditions:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    strategy:
+      fail-fast: true
+    steps:
+      - name: "options"
+        if: ${{ inputs.environment == 'production' }}
+        run: |
+          echo "Pipe Failure"
+          exit 1
+
   log-the-inputs:
+    needs: test-conditions
     runs-on: ubuntu-latest
     steps:
       - run: |
